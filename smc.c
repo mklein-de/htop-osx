@@ -1,9 +1,98 @@
 
+/*{
+
+#include <IOKit/IOTypes.h>
+
+#define OP_NONE               0
+#define OP_LIST               1 
+#define OP_READ               2
+#define OP_READ_FAN           3
+#define OP_WRITE              4
+
+#define KERNEL_INDEX_SMC      2
+
+#define SMC_CMD_READ_BYTES    5
+#define SMC_CMD_WRITE_BYTES   6
+#define SMC_CMD_READ_INDEX    8
+#define SMC_CMD_READ_KEYINFO  9
+#define SMC_CMD_READ_PLIMIT   11
+#define SMC_CMD_READ_VERS     12
+
+#define DATATYPE_FPE2         "fpe2"
+#define DATATYPE_UINT8        "ui8 "
+#define DATATYPE_UINT16       "ui16"
+#define DATATYPE_UINT32       "ui32"
+#define DATATYPE_SP78         "sp78"
+
+// key values
+#define SMC_KEY_CPU_TEMP      "TC0D"
+#define SMC_KEY_FAN0_RPM_MIN  "F0Mn"
+#define SMC_KEY_FAN1_RPM_MIN  "F1Mn"
+#define SMC_KEY_FAN0_RPM_CUR  "F0Ac"
+#define SMC_KEY_FAN1_RPM_CUR  "F1Ac"
+enum {
+ kSMCSuccess = 0,
+ kSMCError = 1
+};
+ 
+enum {
+ kSMCUserClientOpen  = 0,
+ kSMCUserClientClose = 1,
+ kSMCHandleYPCEvent  = 2, 
+      kSMCReadKey         = 5,
+ kSMCWriteKey        = 6,
+ kSMCGetKeyCount     = 7,
+ kSMCGetKeyFromIndex = 8,
+ kSMCGetKeyInfo      = 9
+};
+ 
+typedef struct SMCVersion 
+{
+    unsigned char    major;
+    unsigned char    minor;
+    unsigned char    build;
+    unsigned char    reserved;
+    unsigned short   release;
+     
+} SMCVersion;
+ 
+typedef struct SMCPLimitData 
+{
+    uint16_t    version;
+    uint16_t    length;
+    uint32_t    cpuPLimit;
+    uint32_t    gpuPLimit;
+    uint32_t    memPLimit;
+     
+} SMCPLimitData;
+ 
+typedef struct SMCKeyInfoData 
+{
+    IOByteCount         dataSize;
+    uint32_t            dataType;
+    uint8_t             dataAttributes;
+     
+} SMCKeyInfoData;
+ 
+typedef struct {
+    uint32_t            key;
+    SMCVersion          vers;
+    SMCPLimitData       pLimitData;
+    SMCKeyInfoData      keyInfo;
+    uint8_t             result;
+    uint8_t             status;
+    uint8_t             data8;
+    uint32_t            data32;    
+    uint8_t             bytes[32];
+}  SMCParamStruct;
+
+}*/
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <IOKit/IOKitLib.h>
+
 
 #include "smc.h"
 
@@ -173,4 +262,4 @@ SMCGetCPUTemp(void) {
   double result;
   result = SMCGetTemperature("TC0D");
   return result;
-}
+

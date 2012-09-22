@@ -16,6 +16,9 @@
 #define RICHSTRING_MAXLEN 300
 
 /*{
+#if defined(__APPLE__) && !defined(HAVE_LIBNCURSESW)
+#define HAVE_LIBNCURSESW
+#endif
 
 #define RichString_init(this) (this)->len = 0
 #define RichString_initVal(this) (this).len = 0
