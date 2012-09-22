@@ -902,8 +902,10 @@ ProcessList_scan( ProcessList * this ) {
 
   this->freeMem = this->pageSize * vm_stat.free_count / 1024;
   this->sharedMem = 0;
-  this->buffersMem = 0;
-  this->cachedMem = 0;
+  this->buffersMem = this->pageSize * vm_stat.wire_count / 1024;
+  this->cachedMem = this->pageSize * vm_stat.inactive_count / 1024;
+  this->totalSwap = 0;
+  this->freeSwap = 0;
 
   this->usedMem = this->totalMem - this->freeMem;
 
