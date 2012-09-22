@@ -102,6 +102,7 @@ typedef enum ColorElements_ {
    CPU_IOWAIT,
    CPU_IRQ,
    CPU_SOFTIRQ,
+   CPU_TEMP,
    HOSTNAME,
    LAST_COLORELEMENT
 } ColorElements;
