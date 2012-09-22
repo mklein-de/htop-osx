@@ -12,11 +12,6 @@
 
 #include "debug.h"
 #include <assert.h>
-#ifdef HAVE_LIBNCURSESW
-#include <ncursesw/curses.h>
-#else
-#include <curses.h>
-#endif
 
 #define RICHSTRING_MAXLEN 300
 
@@ -50,8 +45,8 @@ typedef struct RichString_ {
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #endif
 
-#ifdef HAVE_LIBNCURSESW
 
+#ifdef  HAVE_LIBNCURSESW
 inline void RichString_appendn(RichString* this, int attrs, char* data_c, int len) {
    wchar_t data[RICHSTRING_MAXLEN];
    len = mbstowcs(data, data_c, RICHSTRING_MAXLEN);
