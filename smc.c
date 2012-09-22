@@ -150,33 +150,20 @@ SMCGetFanRPM(const char *key_text) {
     return 0;
 }
 
-static const int scales[][2] = {
-    {256.0, 273.15}, /* K */
-    {256.0,   0.0},  /* C */
-    {142.2,  32.0}   /* F */
-};
-
 double
-SMCGetTemperature(const char *key_text, int scale) {
+SMCGetTemperature(const char *key_text) {
     uint8_t buffer[256];
     uint8_t size=255;
-    uint16_t raw_result;
     double result;
-    int i;
     uint32_t key;
     char bin[256];
-    double divisor, freezing;
 
     key = key_to_int(key_text, 4);
     result = SMCReadKey(key, buffer, &size);
     if (result != 0) 
         return -10000.0;
 
-    raw_result = ((uint16_t)buffer[1] + ((uint16_t)buffer[0] << 8));
-    divisor = scales[scale][0];
-    freezing = scales[scale][1];
-    result = (raw_result / divisor) + freezing;
-
+    result = ((uint16_t)buffer[1] + ((uint16_t)buffer[0] << 8)) / 256.0;
     SMCClose();
     return result;
 }
@@ -184,6 +171,6 @@ SMCGetTemperature(const char *key_text, int scale) {
 double
 SMCGetCPUTemp(void) {
   double result;
-  result = SMCGetTemperature("TC0D", CELSIUS);
+  result = SMCGetTemperature("TC0D");
   return result;
 }

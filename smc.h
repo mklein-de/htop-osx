@@ -106,17 +106,13 @@ typedef struct {
     uint8_t             bytes[32];
 }  SMCParamStruct;
 
-# define KELVIN     0
-# define CELSIUS    1
-# define FAHRENHEIT 2
-
 // prototypes
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
 int    SMCOpen           (void);
-double SMCGetTemperature (const char *key, int scale);
+double SMCGetTemperature (const char *key);
 int    SMCGetFanRpm      (const char *key);
 
 #ifdef  __cplusplus
