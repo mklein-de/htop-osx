@@ -262,4 +262,4 @@ SMCGetCPUTemp(void) {
   double result;
   result = SMCGetTemperature("TC0D");
   return result;
-
+}
