@@ -78,6 +78,7 @@ void TraceScreen_run(TraceScreen* this) {
        if (child == -1) return;
        if (child == 0) {
            setuid(geteuid());
+           setpgrp();
            dup2(fdpair[1], STDERR_FILENO);
            fcntl(fdpair[1], F_SETFL, O_NONBLOCK);
            sprintf(buffer, "%d", this->process->pid);
@@ -176,8 +177,8 @@ void TraceScreen_run(TraceScreen* this) {
       Panel_draw(panel, true);
    }
    if (strace) {
-      kill(child, SIGTERM);
-      waitpid(child, NULL, 0);
+      kill(-child, SIGTERM);
+      waitpid(-child, NULL, 0);
       fclose(strace);
    }
    CRT_enableDelay();
