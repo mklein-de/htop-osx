@@ -203,21 +203,49 @@ Settings* Settings_new(ProcessList* pl, Header* header) {
    Settings* this = malloc(sizeof(Settings));
    this->pl = pl;
    this->header = header;
-   char* home;
-   char* rcfile;
-   home = getenv("HOME_ETC");
-   if (!home) home = getenv("HOME");
-   if (!home) home = "";
-   rcfile = getenv("HOMERC");
-   if (!rcfile)
-      this->userSettings = String_cat(home, "/.htoprc");
-   else
-      this->userSettings = String_copy(rcfile);
+   char* legacyDotfile = NULL;
+   char* rcfile = getenv("HTOPRC");
+   if (rcfile) {
+      this->userSettings = strdup(rcfile);
+   } else {
+      const char* home = getenv("HOME");
+      if (!home) home = "";
+      const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+      char* configDir = NULL;
+      char* htopDir = NULL;
+      if (xdgConfigHome) {
+         this->userSettings = String_cat(xdgConfigHome, "/htop/htoprc");
+         configDir = strdup(xdgConfigHome);
+         htopDir = String_cat(xdgConfigHome, "/htop");
+      } else {
+         this->userSettings = String_cat(home, "/.config/htop/htoprc");
+         configDir = String_cat(home, "/.config");
+         htopDir = String_cat(home, "/.config/htop");
+      }
+      legacyDotfile = String_cat(home, "/.htoprc");
+      mkdir(configDir, 0700);
+      mkdir(htopDir, 0700);
+      free(htopDir);
+      free(configDir);
+      struct stat st;
+      lstat(legacyDotfile, &st);
+      if (access(legacyDotfile, R_OK) != 0 || S_ISLNK(st.st_mode)) {
+         free(legacyDotfile);
+         legacyDotfile = NULL;
+      }
+   }
    this->colorScheme = 0;
    this->changed = false;
    this->delay = DEFAULT_DELAY;
-   bool ok = Settings_read(this, this->userSettings);
-   if (!ok) {
+   bool ok = Settings_read(this, legacyDotfile ? legacyDotfile : this->userSettings);
+   if (ok) {
+      if (legacyDotfile) {
+         // Transition to new location and delete old configuration file
+         if (Settings_write(this))
+            unlink(legacyDotfile);
+         free(legacyDotfile);
+      }
+   } else {
       this->changed = true;
       // TODO: how to get SYSCONFDIR correctly through Autoconf?
       char* systemSettings = String_cat(SYSCONFDIR, "/htoprc");
