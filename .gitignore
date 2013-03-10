@@ -16,7 +16,8 @@ htop
 install-sh
 libtool
 ltmain.sh
-m4
+m4/*
+!m4/.gitignore
 missing
 stamp-h1
 .*.swp
