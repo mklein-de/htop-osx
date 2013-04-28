@@ -16,9 +16,6 @@ in the source distribution for its full text.
 
 #include "debug.h"
 
-#define SIGNAL_COUNT 34
-
-
 typedef struct Signal_ {
    Object super;
    char* name;
