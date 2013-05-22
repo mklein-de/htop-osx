@@ -51,9 +51,10 @@ static void CPUTemperatureMeter_display(Object* cast, RichString* out) {
    RichString_init(out);
    
    raw_temp = this->values[0];
+
    if (raw_temp > -100 && raw_temp < 900) {
       converted_temp = celcius_to_scale(raw_temp, scale);
-      snprintf(buffer, 20, "%.1f °%c", converted_temp, scale_markers[scale]);
+      snprintf(buffer, 20, "%.1f %c", converted_temp, scale_markers[scale]);
        if (raw_temp > hot_threshold) {
          RichString_append(out, CRT_colors[CPU_TEMP_HOT], buffer);
        } else if (raw_temp > warm_threshold) {
@@ -62,7 +63,8 @@ static void CPUTemperatureMeter_display(Object* cast, RichString* out) {
          RichString_append(out, CRT_colors[CPU_TEMP_NORMAL], buffer);
        }
    } else {
-      snprintf(buffer, 20, "-.- °%c", scale_markers[scale], converted_temp);
+      snprintf(buffer, 20, "-.- %c", scale_markers[scale]);
+      RichString_append(out, CRT_colors[CPU_TEMP_NORMAL], buffer);
    }
 }
 
@@ -73,7 +75,7 @@ MeterType CPUTemperatureMeter = {
    .total = 100.0,
    .items = 1,
    .attributes = CPUTemperatureMeter_attributes,
-   .name = "CPU Temp",
+   .name = "CPUTemp",
    .uiName = "CPU Temp",
    .caption = "CPU Temp: ",
 };
