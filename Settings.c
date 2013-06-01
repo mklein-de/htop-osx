@@ -145,7 +145,12 @@ bool Settings_write(Settings* this) {
    // TODO: implement File object and make
    // file I/O object-oriented.
    FILE* fd;
+   uid_t euid;
+
+   euid = geteuid();
+   seteuid(getuid());
    fd = fopen(this->userSettings, "w");
+   seteuid(euid);
    if (fd == NULL) {
       return false;
    }
@@ -223,6 +228,8 @@ Settings* Settings_new(ProcessList* pl, Header* header) {
          htopDir = String_cat(home, "/.config/htop");
       }
       legacyDotfile = String_cat(home, "/.htoprc");
+      uid_t euid = geteuid();
+      seteuid(getuid());
       mkdir(configDir, 0700);
       mkdir(htopDir, 0700);
       free(htopDir);
@@ -233,6 +240,7 @@ Settings* Settings_new(ProcessList* pl, Header* header) {
          free(legacyDotfile);
          legacyDotfile = NULL;
       }
+      seteuid(euid);
    }
    this->colorScheme = 0;
    this->changed = false;
