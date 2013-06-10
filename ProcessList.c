@@ -762,6 +762,8 @@ ProcessList_getSwap( ProcessList * this ) {
   this->totalSwap = swap.xsu_total / 1024;
   this->freeSwap = swap.xsu_avail / 1024;
   this->usedSwap = swap.xsu_used / 1024;
+
+  return true;
 }
 
 

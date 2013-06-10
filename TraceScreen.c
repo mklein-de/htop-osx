@@ -64,7 +64,7 @@ static void TraceScreen_draw(TraceScreen* this) {
 void TraceScreen_run(TraceScreen* this) {
    char buffer[1001];
    Panel* panel = this->display;
-   int child;
+   int child = 0;
    FILE *strace;
 
    if (getuid() != 0 && getuid() != this->process->st_uid) {
