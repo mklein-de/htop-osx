@@ -1,5 +1,6 @@
 
 ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = nostdinc
 
 bin_PROGRAMS = htop
 dist_man_MANS = htop.1
