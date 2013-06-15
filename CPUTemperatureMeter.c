@@ -22,10 +22,29 @@ int CPUTemperatureMeter_attributes[] = {
 };
 
 static void CPUTemperatureMeter_setValues(Meter* this, char* buffer, int size) {
-   double temp;
+    double temp[5];
+    
+    temp[0] = SMCGetTemperature("TCAH"); // Some Mac Pros have two sensors, since they are SMP
+    temp[1] = SMCGetTemperature("TCBH"); // Second CPU sensor for Mac Pro
+    temp[2] = SMCGetTemperature("TC0D"); // Older MBPs
+    temp[3] = SMCGetTemperature("TC0F"); // Newer MBPs
+    temp[4] = SMCGetTemperature("TC0H"); // Some iMacs
 
-   temp = SMCGetTemperature(SMC_KEY_CPU_TEMP); 
-   this->values[0] = temp;
+    if (temp[0] != 0 && temp[1] != 0) {
+        if (temp[0] > temp[1])
+           this->values[0] = temp[0];
+        else
+           this->values[0] = temp[1];
+    } else if (temp[2] != 0) {
+        this->values[0] = temp[2];
+    } else if (temp[3] != 0) {
+        this->values[0] = temp[3];
+    } else if (temp[4] != 0) {
+        this->values[0] = temp[4];
+    } else {
+        // Couldn't retrieve sensor information...
+        this->values[0] = 0;
+    }
 }
 
 static const char * scale_markers = "KCF";
