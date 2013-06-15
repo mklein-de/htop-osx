@@ -25,7 +25,6 @@
 #define DATATYPE_SP78         "sp78"
 
 // key values
-#define SMC_KEY_CPU_TEMP      "TC0D"
 #define SMC_KEY_FAN0_RPM_MIN  "F0Mn"
 #define SMC_KEY_FAN1_RPM_MIN  "F1Mn"
 #define SMC_KEY_FAN0_RPM_CUR  "F0Ac"
