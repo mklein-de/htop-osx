@@ -302,6 +302,7 @@ int main(int argc, char** argv) {
    int incSearchIndex = 0;
    incSearchBuffer[0] = 0;
    bool incSearchMode = false;
+   bool incFilterMode = false;
 
    ProcessList* pl = NULL;
    UsersTable* ut = UsersTable_new();
@@ -375,8 +376,16 @@ int main(int argc, char** argv) {
          int size = ProcessList_size(pl);
          int index = 0;
          for (int i = 0; i < size; i++) {
+            int hidden = 0;
             Process* p = ProcessList_get(pl, i);
-            if (!userOnly || (p->st_uid == userId)) {
+
+            if (userOnly && (p->st_uid != userId))
+                hidden = 1;
+            if (incFilterMode && incSearchMode && !(String_contains_i(p->comm, incSearchBuffer)))
+                hidden = 1;
+
+            if (!hidden) 
+            {
                Panel_set(panel, index, (Object*)p);
                if ((!follow && index == currPos) || (follow && p->pid == currPid)) {
                   Panel_setSelected(panel, index);
@@ -432,6 +441,7 @@ int main(int argc, char** argv) {
             incSearchBuffer[incSearchIndex] = 0;
          } else {
             incSearchMode = false;
+            incFilterMode = false;
             FunctionBar_draw(defaultBar, NULL);
             continue;
          }
@@ -761,6 +771,8 @@ int main(int argc, char** argv) {
          doRefresh = changePriority(panel, -1);
          break;
       }
+      case '\\':
+          incFilterMode = true;
       case KEY_F(3):
       case '/':
          incSearchIndex = 0;

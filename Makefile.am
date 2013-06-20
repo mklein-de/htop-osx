@@ -14,6 +14,7 @@ pixmap_DATA = htop.png
 htop_CFLAGS = -pedantic -Wall -std=c99 -D_XOPEN_SOURCE_EXTENDED
 htop_LDFLAGS = -framework IOKit -framework CoreFoundation
 AM_CPPFLAGS = -DSYSCONFDIR=\"$(sysconfdir)\"
+DEFAULT_INCLUDES = -iquote .
 
 
 myhtopsources = AvailableMetersPanel.c CategoriesPanel.c CheckItem.c \
@@ -23,7 +24,8 @@ LoadAverageMeter.c MemoryMeter.c Meter.c MetersPanel.c Object.c Panel.c \
 BatteryMeter.c Process.c ProcessList.c RichString.c ScreenManager.c Settings.c \
 SignalItem.c SignalsPanel.c String.c SwapMeter.c TasksMeter.c TraceScreen.c \
 UptimeMeter.c UsersTable.c Vector.c AvailableColumnsPanel.c AffinityPanel.c \
-HostnameMeter.c OpenFilesScreen.c CmdlineScreen.c EnvScreen.c util.c
+HostnameMeter.c OpenFilesScreen.c CmdlineScreen.c EnvScreen.c util.c \
+smc.c CPUTemperatureMeter.c
 
 myhtopheaders = AvailableColumnsPanel.h AvailableMetersPanel.h \
 CategoriesPanel.h CheckItem.h ClockMeter.h ColorsPanel.h ColumnsPanel.h \
@@ -33,7 +35,7 @@ BatteryMeter.h Meter.h MetersPanel.h Object.h Panel.h ProcessList.h RichString.h
 ScreenManager.h Settings.h SignalItem.h SignalsPanel.h String.h \
 SwapMeter.h TasksMeter.h TraceScreen.h UptimeMeter.h UsersTable.h Vector.h \
 Process.h AffinityPanel.h HostnameMeter.h OpenFilesScreen.h CmdlineScreen.h \
-EnvScreen.h util.h
+EnvScreen.h util.h smc.h CPUTemperatureMeter.h
 
 SUFFIXES = .h
 
