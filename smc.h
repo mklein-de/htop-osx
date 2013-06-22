@@ -110,9 +110,9 @@ typedef struct {
 extern "C" {
 #endif
 
-int    SMCOpen           (void);
-double SMCGetTemperature (const char *key);
-int    SMCGetFanRpm      (const char *key);
+int     SMCOpen           (void);
+double  SMCGetTemperature (const char *key);
+float   SMCGetFanRPM      (const char *key);
 
 #ifdef  __cplusplus
 }
