@@ -18,7 +18,7 @@ int FanRPMMeter_attributes[] = {
 };
 
 static void FanRPMMeter_setValues(Meter* this, char* buffer, int size) {
-    float rpm[6];
+    float rpm[8];
     
     rpm[0] = SMCGetFanRPM("F0Ac");
     rpm[1] = SMCGetFanRPM("F0Mx");
@@ -26,6 +26,8 @@ static void FanRPMMeter_setValues(Meter* this, char* buffer, int size) {
     rpm[3] = SMCGetFanRPM("F1Mx");
     rpm[4] = SMCGetFanRPM("F2Ac");
     rpm[5] = SMCGetFanRPM("F2Mx");
+    rpm[6] = SMCGetFanRPM("F3Ac");
+    rpm[7] = SMCGetFanRPM("F3Mx");
 
     //printf("0 = %.0f, 2 = %.0f, 4 = %.0f\n", rpm[0], rpm[2], rpm[4]);
     //printf("1 = %.0f, 3 = %.0f, 5 = %.0f\n", rpm[1], rpm[3], rpm[5]);
@@ -36,6 +38,8 @@ static void FanRPMMeter_setValues(Meter* this, char* buffer, int size) {
     this->values[3] = rpm[3];
     this->values[4] = rpm[4];
     this->values[5] = rpm[5];
+    this->values[6] = rpm[6];
+    this->values[7] = rpm[7];
 }
 
 static void FanRPMMeter_display(Object* cast, RichString* out) {
@@ -44,14 +48,15 @@ static void FanRPMMeter_display(Object* cast, RichString* out) {
     double hot_threshold = 4000.0; /* RPM */
     double warm_threshold = 3000.0; /* RPM */ 
     double cold_threshold = 1000.0; /* RPM */
-    double raw_rpm_1, raw_rpm_2, raw_rpm_3;
-    double max_rpm_1, max_rpm_2, max_rpm_3;
+    double raw_rpm_1, raw_rpm_2, raw_rpm_3, raw_rpm_4;
+    double max_rpm_1, max_rpm_2, max_rpm_3, max_rpm_4;
     
     RichString_init(out);
     
     raw_rpm_1 = this->values[0]; max_rpm_1 = this->values[1];
     raw_rpm_2 = this->values[2]; max_rpm_2 = this->values[3];
     raw_rpm_3 = this->values[4]; max_rpm_3 = this->values[5];
+    raw_rpm_4 = this->values[6]; max_rpm_4 = this->values[7];
     
     if (raw_rpm_1 > 0) {
         snprintf(buffer, 20, "%.0f RPM", raw_rpm_1);
@@ -88,6 +93,17 @@ static void FanRPMMeter_display(Object* cast, RichString* out) {
           RichString_append(out, CRT_colors[FAN_RPM_NORMAL], buffer);
         }
     }
+
+    if (raw_rpm_4 > 0) {
+        snprintf(buffer, 20, ", %.0f RPM", raw_rpm_4);
+        if (raw_rpm_4 > hot_threshold) {
+          RichString_append(out, CRT_colors[FAN_RPM_HOT], buffer);
+        } else if (raw_rpm_4 > warm_threshold) {
+          RichString_append(out, CRT_colors[FAN_RPM_WARM], buffer);
+        } else {
+          RichString_append(out, CRT_colors[FAN_RPM_NORMAL], buffer);
+        }
+    }
 }
 
 MeterType FanRPMMeter = {
@@ -95,7 +111,7 @@ MeterType FanRPMMeter = {
     .display = FanRPMMeter_display,
     .mode = TEXT_METERMODE,
     .total = 100.0,
-    .items = 6,
+    .items = 8,
     .attributes = FanRPMMeter_attributes,
     .name = "FanRPM",
     .uiName = "Fan RPM",
