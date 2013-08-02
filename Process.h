@@ -98,7 +98,10 @@ typedef struct Process_ {
    long int nlwp;
    #ifdef DEBUG
    long int itrealvalue;
+   #endif
    unsigned long int starttime;
+   char starttime_show[8];
+   #ifdef DEBUG
    unsigned long int vsize;
    long int rss;
    unsigned long int rlim;

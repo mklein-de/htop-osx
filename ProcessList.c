@@ -855,6 +855,10 @@ ProcessList_getProcesses( ProcessList * this, float period ) {
     process->priority = ki->curpri;
     process->nice = p->p_nice;
     process->nlwp = 0;          // TODO
+    time_t start = p->p_starttime.tv_sec;
+    time_t age = time(NULL) - process->starttime;
+    process->starttime = start;
+    strftime(process->starttime_show, 7, age < 24*60*60 ? "%R" : "%b%d", localtime(&start));
     process->exit_signal = 0;   // TODO
     process->processor = 0;     // TODO
     //process->vpid          = 0;         // TODO

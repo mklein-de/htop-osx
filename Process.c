@@ -182,7 +182,7 @@ char *Process_fieldTitles[] = {
   "", "  PID ", "Command ", "S ", " PPID ", " PGRP ", " SESN ",
   "  TTY ", "TPGID ", "- ", "- ", "- ", "- ", "- ",
   " UTIME+  ", " STIME+  ", "- ", "- ", "PRI ", " NI ", "- ",
-  "- ", "- ", "- ", "- ", "- ", "- ", "- ",
+  "START ", "- ", "- ", "- ", "- ", "- ", "- ",
   "- ", "- ", "- ", "- ", "- ", "- ", "- ",
   "- ", "- ", "- ", "CPU ", " VIRT ", "  RES ", "  SHR ",
   " CODE ", " DATA ", " LIB ", " DIRTY ", " UID ", "CPU% ", "MEM% ",
@@ -332,6 +332,9 @@ Process_writeField( Process * this, RichString * str, ProcessField field ) {
     break;
   case NLWP:
     snprintf( buffer, n, "%4ld ", this->nlwp );
+    break;
+  case STARTTIME:
+    snprintf(buffer, n, "%s ", this->starttime_show);
     break;
   case COMM:{
       if ( this->pl->highlightThreads
@@ -680,6 +683,8 @@ Process_compare( const void *v1, const void *v2 ) {
     return strcmp( p1->comm, p2->comm );
   case NLWP:
     return ( p1->nlwp - p2->nlwp );
+  case STARTTIME:
+    return ( p1->starttime - p2->starttime );
 #ifdef HAVE_OPENVZ
   case CTID:
     return ( p1->ctid - p2->ctid );
