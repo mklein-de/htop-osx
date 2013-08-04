@@ -49,6 +49,8 @@ void Vector_prune(Vector* this);
 
 void Vector_sort(Vector* this);
 
+void Vector_reverse(Vector* this);
+
 void Vector_insert(Vector* this, int index, void* data_);
 
 Object* Vector_take(Vector* this, int index);

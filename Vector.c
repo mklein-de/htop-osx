@@ -114,6 +114,19 @@ void Vector_sort(Vector* this) {
    assert(Vector_isConsistent(this));
 }
 
+void Vector_reverse(Vector* this)
+{
+   assert(Vector_isConsistent(this));
+   Object** l = this->array;
+   Object** r = this->array + this->items - 1;
+   while (l < r)
+   {
+       Object* tmp = *l;
+       *l++ = *r;
+       *r-- = tmp;
+   }
+}
+
 static void Vector_checkArraySize(Vector* this) {
    assert(Vector_isConsistent(this));
    if (this->items >= this->arraySize) {
