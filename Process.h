@@ -99,7 +99,7 @@ typedef struct Process_ {
    #ifdef DEBUG
    long int itrealvalue;
    #endif
-   unsigned long int starttime;
+   struct timeval starttime;
    char starttime_show[8];
    #ifdef DEBUG
    unsigned long int vsize;

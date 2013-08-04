@@ -684,7 +684,10 @@ Process_compare( const void *v1, const void *v2 ) {
   case NLWP:
     return ( p1->nlwp - p2->nlwp );
   case STARTTIME:
-    return ( p1->starttime - p2->starttime );
+    if (p1->starttime.tv_sec == p2->starttime.tv_sec)
+        return p1->starttime.tv_usec - p2->starttime.tv_usec;
+    else
+        return p1->starttime.tv_sec - p2->starttime.tv_sec;
 #ifdef HAVE_OPENVZ
   case CTID:
     return ( p1->ctid - p2->ctid );
