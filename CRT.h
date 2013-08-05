@@ -107,6 +107,10 @@ typedef enum ColorElements_ {
    CPU_TEMP_WARM,
    CPU_TEMP_NORMAL,
    HOSTNAME,
+   FAN_RPM,
+   FAN_RPM_HOT,
+   FAN_RPM_WARM,
+   FAN_RPM_NORMAL,
    LAST_COLORELEMENT
 } ColorElements;
 

@@ -99,6 +99,7 @@ typedef enum {
 #include "ClockMeter.h"
 #include "HostnameMeter.h"
 #include "CPUTemperatureMeter.h"
+#include "FanRPMMeter.h"
 
 
 #ifndef MIN
@@ -127,6 +128,7 @@ MeterType* Meter_types[] = {
    &AllCPUsMeter,
    &CPUTemperatureMeter,
    &HostnameMeter,
+   &FanRPMMeter,
    NULL
 };
 

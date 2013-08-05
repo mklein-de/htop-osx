@@ -109,6 +109,22 @@ key_to_int(const char *str, int size)
     return total;
 }
 
+float _strtof(uint8_t *str, int size, int e)
+{
+    float total = 0;
+    int i;
+
+    for (i = 0; i < size; i++)
+    {
+        if (i == (size - 1))
+           total += (str[i] & 0xff) >> e;
+        else
+           total += str[i] << (size - 1 - i) * (8 - e);
+    }
+
+    return total;
+}
+
 int SMCOpen(void)
 {
     IOReturn       result;
@@ -221,12 +237,11 @@ SMCReadKey(uint32_t     key,
     return kSMCSuccess;
 }
 
-uint16_t
+float
 SMCGetFanRPM(const char *key_text) {
     uint8_t buffer[256];
     uint8_t size=255;
-    uint16_t result;
-    int i;
+    float result;
     uint32_t key;
 
     key = key_to_int(key_text, 4);
@@ -234,8 +249,9 @@ SMCGetFanRPM(const char *key_text) {
     if (result != 0) 
         return -1;
     
-    result = ((uint16_t)buffer[1] + ((uint16_t)buffer[0] << 8)) >> 2;
-    return 0;
+    result = _strtof(buffer, (int)size, 2);
+    SMCClose();
+    return result;
 }
 
 double
@@ -244,7 +260,6 @@ SMCGetTemperature(const char *key_text) {
     uint8_t size=255;
     double result;
     uint32_t key;
-    char bin[256];
 
     key = key_to_int(key_text, 4);
     result = SMCReadKey(key, buffer, &size);
@@ -256,9 +271,3 @@ SMCGetTemperature(const char *key_text) {
     return result;
 }
 
-double
-SMCGetCPUTemp(void) {
-  double result;
-  result = SMCGetTemperature("TC0D");
-  return result;
-}
